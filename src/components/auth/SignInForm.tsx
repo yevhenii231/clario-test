@@ -20,7 +20,7 @@ export function SignInForm() {
 
   const passwordRules = [
     {
-      message: 'Has at least 8 characters (no spaces)',
+      message: '8 characters or more (no spaces)',
       isValid: password.length >= 8 && !password.includes(' '),
     },
     {
@@ -28,7 +28,7 @@ export function SignInForm() {
       isValid: /[A-Z]/.test(password) && /[a-z]/.test(password),
     },
     {
-      message: '1 digit minimum',
+      message: 'At least one digit ',
       isValid: /\d/.test(password),
     },
   ];
@@ -79,7 +79,7 @@ export function SignInForm() {
           })}
           id="email"
           type="email"
-          placeholder="Email address"
+          placeholder="Email"
           label="Email address"
           showError={isSubmitted}
           error={errors.email}
@@ -111,7 +111,7 @@ export function SignInForm() {
           })}
           id="password"
           type="password"
-          placeholder="Password"
+          placeholder="Create your password"
           label="Password"
           showError={isSubmitted}
           validationState={
