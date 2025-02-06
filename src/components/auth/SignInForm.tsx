@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FormData, VALIDATION_RULES } from '@/types/auth';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { logger } from '@/lib/logger/Logger';
 
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,9 +59,9 @@ export function SignInForm() {
     try {
       setIsLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 1000)); // simulate api call
-      console.log(data);
+      logger.info(JSON.stringify(data));
     } catch (error) {
-      console.error(error);
+      logger.error(JSON.stringify(error));
     } finally {
       setIsLoading(false);
     }
