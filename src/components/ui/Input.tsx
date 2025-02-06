@@ -1,5 +1,6 @@
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
+import { cn } from '@/lib/utils';
 
 interface InputProps extends ComponentPropsWithoutRef<'input'> {
   error?: FieldError;
@@ -10,6 +11,7 @@ interface InputProps extends ComponentPropsWithoutRef<'input'> {
     state: 'initial' | 'error' | 'success';
   }>;
   showError?: boolean;
+  className?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -20,6 +22,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       validationState,
       validationRules,
       showError = true,
+      className,
       ...props
     },
     ref
@@ -31,15 +34,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </label>
         <input
           ref={ref}
-          className={`appearance-none rounded-[10px] text-[16px] relative block w-full px-[20px] py-[14.5px] border border-2 transition duration-300 ${
-            showError && validationState === 'error'
-              ? 'border-rose-400 bg-rose-50 text-rose-400'
-              : validationState === 'success'
-              ? showError
-                ? 'border-green-500 bg-emerald-50 text-emerald-500'
-                : 'border-green-500'
-              : 'border-transparent focus:border-slate-400'
-          } placeholder-slate-400 focus:outline-none`}
+          className={cn(
+            'appearance-none rounded-[10px] text-[16px] relative block w-full px-[20px] py-[14.5px]',
+            'border-2 transition duration-300',
+            'placeholder-slate-400 focus:outline-none',
+            {
+              'border-rose-400 bg-rose-50 text-rose-400':
+                showError && validationState === 'error',
+              'border-green-500 bg-emerald-50 text-emerald-500':
+                showError && validationState === 'success',
+              'border-green-500': !showError && validationState === 'success',
+              'border-transparent focus:border-slate-400':
+                !validationState ||
+                (!showError && validationState !== 'success'),
+            },
+            className
+          )}
           {...props}
         />
         {validationRules ? (
@@ -47,13 +57,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {validationRules.map((rule, index) => (
               <p
                 key={index}
-                className={`text-sm ${
-                  rule.state === 'success'
-                    ? 'text-emerald-500 border-emerald-500'
-                    : rule.state === 'error'
-                    ? 'text-rose-400 border-rose-400'
-                    : 'text-gray-400 border-gray-300'
-                }`}
+                className={cn('text-sm', {
+                  'text-emerald-500 border-emerald-500':
+                    rule.state === 'success',
+                  'text-rose-400 border-rose-400':
+                    rule.state === 'error' && showError,
+                  'text-gray-400 border-gray-300':
+                    rule.state === 'initial' ||
+                    (rule.state === 'error' && !showError),
+                })}
               >
                 {rule.message}
               </p>
